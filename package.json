@@ -1,0 +1,29 @@
+{
+  "name": "node-js-mentoring",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "task1": "nodemon --exec babel-node --watch task1 ./task1",
+    "task2": "nodemon --exec babel-node --watch task2 ./task2 -e js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElenaRomanchuk/node-js-mentoring.git"
+  },
+  "author": "Elena Romanchuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ElenaRomanchuk/node-js-mentoring/issues"
+  },
+  "homepage": "https://github.com/ElenaRomanchuk/node-js-mentoring#readme",
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/node": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
+}
