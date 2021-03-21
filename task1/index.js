@@ -1,4 +1,4 @@
-const { Transform } = require('stream');
+import { Transform } from 'stream';
 
 const stringTransformer = new Transform({
   transform(chunk, encoding, callback) {
