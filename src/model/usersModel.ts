@@ -42,7 +42,7 @@ class UserStorage {
   getAutoSuggestUsers(loginSubstring: string = '', limit: number): User[] {
     const filteredUsers = this.getUsers()
       .filter((user: User) => user.login.toLowerCase().startsWith(loginSubstring.toLowerCase()))
-      .sort((user1: User, user2: User) => (user1.login > user2.login ? -1 : 1));
+      .sort((user1: User, user2: User) => (user1.login.toLowerCase() > user2.login.toLowerCase() ? 1 : -1));
 
     if (limit) {
       return filteredUsers.slice(0, limit)

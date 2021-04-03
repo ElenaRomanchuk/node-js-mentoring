@@ -1,21 +1,23 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import {
-    getUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    getUserSuggestions, deleteUser
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  getUserSuggestions, deleteUser
 } from "../controllers/usersController";
+import {userValidation} from '../middleware/validation/userValidation';
+import {userSearchValidation} from '../middleware/validation/userSearchValidation'
 
 export const usersRouter = Router();
 
 usersRouter.route('/users')
-    .get(getUsers)
-    .post(createUser);
+  .get(getUsers)
+  .post(userValidation, createUser);
 
 usersRouter.route('/users/:id')
-    .get(getUserById)
-    .put(updateUser)
-    .delete(deleteUser);
+  .get(getUserById)
+  .put(userValidation, updateUser)
+  .delete(deleteUser);
 
-usersRouter.get('/search', getUserSuggestions);
+usersRouter.get('/search', userSearchValidation, getUserSuggestions);
