@@ -10,3 +10,4 @@ PUT | /users/:id | Update the user by id.
 DELETE | /users/:id | Delete user by id.
 GET | /search?login=login&limit=max_rows | Search user by login and cut the result according to the limit.    
  
+You can use [Postman collection](https://github.com/ElenaRomanchuk/node-js-mentoring/blob/module2/NodeJSMentoring.postman_collection.json) for testing purposes.
