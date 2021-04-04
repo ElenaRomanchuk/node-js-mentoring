@@ -1,16 +1,23 @@
+import 'reflect-metadata';
 import express from 'express';
 import { errorHandler } from "./middleware/errorHandler";
-import { usersRouter } from './routers';
+import { userRouter } from './routers';
+import { initDB } from './loaders/initDB';
+import config from './config';
 
-const DEFAULT_PORT = 3000;
+const startServer = async () => {
+  console.log('Start initialization DB...');
+  await initDB();
 
-const app = express();
+  const app = express();
 
-app.use(express.json());
-app.use(errorHandler);
+  app.use(express.json());
+  app.use(errorHandler);
 
-const port = process.env.PORT || DEFAULT_PORT;
+  await app.listen(config.port);
+  console.log(`NodeJS mentoring application is running on ${config.port} port`)
 
-app.listen(port, () => console.log(`NodeJS mentoring application is running on ${port} port`));
+  app.use('/', userRouter);
+};
 
-app.use('/', usersRouter);
+startServer();

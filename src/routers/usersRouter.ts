@@ -1,23 +1,22 @@
-import {Router} from 'express';
-import {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  getUserSuggestions, deleteUser
-} from "../controllers/usersController";
-import {userValidation} from '../middleware/validation/userValidation';
-import {userSearchValidation} from '../middleware/validation/userSearchValidation'
+import { Router } from 'express';
+import { Container } from 'typedi';
+import { userValidation } from '../middleware/validation/userValidation';
+import { userSearchValidation } from '../middleware/validation/userSearchValidation';
+import {UserController} from "../controllers/usersController";
+import '../models';
 
-export const usersRouter = Router();
+const userController = Container.get(UserController);
 
-usersRouter.route('/users')
-  .get(getUsers)
-  .post(userValidation, createUser);
+export const userRouter = Router();
 
-usersRouter.route('/users/:id')
-  .get(getUserById)
-  .put(userValidation, updateUser)
-  .delete(deleteUser);
+  userRouter.route('/users')
+    .get(userController.getUsers)
+    .post(userValidation, userController.createUser);
 
-usersRouter.get('/search', userSearchValidation, getUserSuggestions);
+  userRouter.route('/users/:id')
+    .get(userController.getUserById)
+    .put(userValidation, userController.updateUser)
+    .delete(userController.deleteUser);
+
+  userRouter.get('/search', userSearchValidation, userController.getUserSuggestions);
+

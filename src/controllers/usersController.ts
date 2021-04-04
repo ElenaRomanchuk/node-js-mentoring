@@ -1,72 +1,77 @@
 import {Request, Response, NextFunction} from 'express';
 import {ValidatedRequest} from 'express-joi-validation';
+import {Service} from "typedi";
 import {UserRequestSchema} from '../middleware/validation/userValidation';
 import {UserSearchRequestSchema} from '../middleware/validation/userSearchValidation'
-import userStorage from '../model/usersModel';
+import { UserService } from '../services/userService';
 
-export const getUsers = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.json(userStorage.getUsers());
-  } catch (error) {
-    next(error);
+@Service()
+export class UserController {
+  private userService;
+
+  constructor(userService: UserService) {
+    this.userService = userService;
   }
-};
 
-export const getUserById = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const user = userStorage.getUserById(req.params.id);
-    if (user) {
+  getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await this.userService.getUsers();
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await this.userService.getUserByID(req.params.id);
+      if (user) {
+        res.json(user);
+      } else {
+        res.status(404).json({message: `User with id "${req.params.id}" not found`});
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  createUser = async (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) => {
+    try {
+      const userData = req.body;
+      const user = await this.userService.createUser(userData);
       res.json(user);
-    } else {
-      res.status(404).json({message: `User with id "${req.params.id}" not found`});
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
   }
-};
 
-export const createUser = (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) => {
-  try {
-    const user = req.body;
-    res.json(userStorage.createUser(user));
-  } catch (error) {
-    next(error)
+  updateUser = async (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) => {
+    try {
+      const userData = {...req.body, id: req.params.id};
+      const user = await this.userService.updateUser(userData);
+      res.send(user);
+    } catch (error) {
+      next(error)
+    }
   }
-};
 
-export const updateUser = (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) => {
-  try {
-    const user = {...req.body, id: req.params.id};
-    if (userStorage.getUserById(user.id)) {
-      userStorage.updateUser(user);
+  deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.userService.deleteUser(req.params.id);
       res.sendStatus(200);
-    } else {
-      res.status(404).json({message: `User with id "${user.id}" not found`})
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
   }
-};
 
-export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const user = userStorage.getUserById(req.params.id);
-    if (user) {
-      userStorage.deleteUser(user.id);
-      res.sendStatus(200);
-    } else {
-      res.status(404).json({message: 'User not found'});
+  getUserSuggestions = async (req: ValidatedRequest<UserSearchRequestSchema>, res: Response, next: NextFunction) => {
+    try {
+      const {login, limit} = req.query;
+      const users = await this.userService.getAutoSuggestUsers((login || '').toString(), Number(limit));
+      res.json(users);
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
   }
-};
+}
 
-export const getUserSuggestions = (req: ValidatedRequest<UserSearchRequestSchema>, res: Response, next: NextFunction) => {
-  try {
-    const {login, limit} = req.query;
-    res.json(userStorage.getAutoSuggestUsers((login || '').toString(), Number(limit)));
-  } catch (error) {
-    next(error)
-  }
-};
