@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import { errorHandler } from "./middleware/errorHandler";
-import { userRouter } from './routers';
+import { userRouter, groupRouter } from './routers';
 import { initDB } from './loaders/initDB';
 import config from './config';
 
@@ -17,7 +17,7 @@ const startServer = async () => {
   await app.listen(config.port);
   console.log(`NodeJS mentoring application is running on ${config.port} port`)
 
-  app.use('/', userRouter);
+  app.use('/', [userRouter, groupRouter]);
 };
 
 startServer();
