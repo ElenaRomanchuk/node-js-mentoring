@@ -45,8 +45,27 @@ DROP TABLE public.user_group;
 CREATE TABLE public.user_group
 (
     "UserId" uuid NOT NULL,
-    "GroupId" uuid NOT NULL
+    "GroupId" uuid NOT NULL,
+    CONSTRAINT user_group_pkey PRIMARY KEY ("UserId", "GroupId")
 )`;
+
+const addUserGroupConstraintsQuery: string = `
+-- ALTER TABLE public.user_group DROP CONSTRAINT "user_group_UserId_fkey";
+
+ALTER TABLE public.user_group
+    ADD CONSTRAINT "user_group_UserId_fkey" FOREIGN KEY ("UserId")
+    REFERENCES public.users (id) MATCH FULL
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+
+-- ALTER TABLE public.user_group DROP CONSTRAINT "user_group_GroupId_fkey";
+
+ALTER TABLE public.user_group
+    ADD CONSTRAINT "user_group_GroupId_fkey" FOREIGN KEY ("GroupId")
+    REFERENCES public.groups (id) MATCH FULL
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+`;
 
 
 const initTable = async (client: Client, createTableQuery: string, fillTableQuery?: string) => {
@@ -55,7 +74,7 @@ const initTable = async (client: Client, createTableQuery: string, fillTableQuer
     console.log('Table has created\n', createTableResult);
     if (fillTableQuery) {
       const insertResult = await client.query(fillTableQuery);
-      console.log('Query insert\n', insertResult);
+      console.log('Query insert/alter\n', insertResult);
     }
   } catch (err) {
     console.log('query error\n', err);
@@ -70,7 +89,7 @@ export const initDB = async () => {
     console.log('Connected to the DB\n');
     await initTable(client, createUserTableQuery, fillUserTableQuery);
     await initTable(client, createGroupTableQuery, fillGroupTableQuery);
-    await initTable(client, createUserGroupTableQuery);
+    await initTable(client, createUserGroupTableQuery, addUserGroupConstraintsQuery);
   } catch (err) {
     console.error('connection error\n', err.stack)
   }
