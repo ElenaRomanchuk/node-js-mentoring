@@ -4,6 +4,7 @@ import {Service} from "typedi";
 import {GroupRequestSchema} from '../middleware/validation/groupValidation';
 import { AddUsersRequestSchema } from '../middleware/validation/addUsersToGroupValidation';
 import { GroupService } from '../services/groupService';
+import { asyncControllerErrorLog } from '../logging/asyncControllerErrorLog';
 
 @Service()
 export class GroupController {
@@ -13,7 +14,8 @@ export class GroupController {
     this.groupService = groupService;
   }
 
-  getGroups = async (req: Request, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async getGroups (req: Request, res: Response, next: NextFunction) {
     try {
       const groups = await this.groupService.getGroups();
       res.json(groups);
@@ -22,7 +24,8 @@ export class GroupController {
     }
   }
 
-  getGroupById = async (req: Request, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async getGroupById (req: Request, res: Response, next: NextFunction) {
     try {
       const group = await this.groupService.getGroupByID(req.params.id);
       if (group) {
@@ -35,7 +38,8 @@ export class GroupController {
     }
   }
 
-  createGroup = async (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async createGroup (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) {
     try {
       const groupData = req.body;
       const group = await this.groupService.createGroup(groupData);
@@ -45,7 +49,8 @@ export class GroupController {
     }
   }
 
-  updateGroup = async (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async updateGroup (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) {
     try {
       const groupData = {...req.body, id: req.params.id};
       const group = await this.groupService.updateGroup(groupData);
@@ -55,7 +60,8 @@ export class GroupController {
     }
   }
 
-  deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async deleteGroup (req: Request, res: Response, next: NextFunction) {
     try {
       await this.groupService.deleteGroup(req.params.id);
       res.sendStatus(200);
@@ -64,7 +70,8 @@ export class GroupController {
     }
   }
 
-  addUsersToGroup = async (req: ValidatedRequest<AddUsersRequestSchema>, res: Response, next: NextFunction) => {
+  @asyncControllerErrorLog()
+  async addUsersToGroup (req: ValidatedRequest<AddUsersRequestSchema>, res: Response, next: NextFunction) {
     try {
       const group = await this.groupService.addUsersToGroup(req.params.id, req.query.user);
       res.send(group);

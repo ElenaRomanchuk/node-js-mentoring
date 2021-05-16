@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import { Container } from 'typedi';
 import { userValidation } from '../middleware/validation/userValidation';
 import { userSearchValidation } from '../middleware/validation/userSearchValidation';
@@ -10,13 +10,13 @@ const userController = Container.get(UserController);
 export const userRouter = Router();
 
   userRouter.route('/users')
-    .get(userController.getUsers)
-    .post(userValidation, userController.createUser);
+    .get(userController.getUsers.bind(userController))
+    .post(userValidation, userController.createUser.bind(userController));
 
   userRouter.route('/users/:id')
-    .get(userController.getUserById)
-    .put(userValidation, userController.updateUser)
-    .delete(userController.deleteUser);
+    .get(userController.getUserById.bind(userController))
+    .put(userValidation,userController.updateUser.bind(userController))
+    .delete(userController.deleteUser.bind(userController));
 
-  userRouter.get('/search', userSearchValidation, userController.getUserSuggestions);
+userRouter.get('/search', userSearchValidation, userController.getUserSuggestions.bind(userController));
 
