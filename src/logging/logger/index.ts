@@ -1,3 +1,3 @@
-import { LoggerFactory } from "./loggerFactory";
+import { WinstonLogger } from "./loggerFactory";
 
-export const logger = LoggerFactory.getInstance();
+export const logger = WinstonLogger.getInstance();

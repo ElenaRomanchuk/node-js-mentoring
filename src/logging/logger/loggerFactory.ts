@@ -2,7 +2,7 @@ import winston, { Logger } from 'winston';
 
 let logger: Logger;
 
-export class LoggerFactory {
+export class WinstonLogger {
   static getInstance(){
     if (logger) {
       return logger;
