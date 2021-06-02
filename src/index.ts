@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 import express from 'express';
+import cors from 'cors';
 import { logger } from './logging/logger';
 import { errorHandler } from "./middleware/errorHandler";
 import { requestLogger } from './middleware/requestLogger';
-import { userRouter, groupRouter } from './routers';
+import { checkAuthentication } from './middleware/checkAuthentication';
+import { userRouter, groupRouter, authRouter } from './routers';
 import { initDB } from './loaders/initDB';
 import config from './config';
 
@@ -25,14 +27,16 @@ const startServer = async () => {
 
   const app = express();
 
+  app.use(cors());
   app.use(express.json());
   app.use(requestLogger);
+  app.use(checkAuthentication);
   app.use(errorHandler);
 
   await app.listen(config.port);
   console.log(`NodeJS mentoring application is running on ${config.port} port`)
 
-  app.use('/', [userRouter, groupRouter]);
+  app.use('/', [userRouter, groupRouter, authRouter]);
 };
 
 startServer();
