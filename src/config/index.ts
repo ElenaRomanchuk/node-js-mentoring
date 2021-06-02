@@ -4,6 +4,7 @@ const DEFAULT_DB_PORT = 5432;
 const DEFAULT_APP_PORT = 3000;
 const DEFAULT_DATABASE = 'swgocmze';
 const DEFAULT_USERNAME = 'swgocmze';
+const DEFAULT_SECRET = 'myTestSecret';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const config = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || DEFAULT_DATABASE,
   dbPort: process.env.DB_PORT || DEFAULT_DB_PORT,
+  secret: process.env.SECRET || DEFAULT_SECRET,
 };
 
 export default {

@@ -24,6 +24,11 @@ export class UserService {
     }
     throw httpErrors(404, USER_NOT_FOUND);
   }
+
+  public async getUserByCredentials (login: User['login'], password: User['password']) {
+    return this.userModel.findOne({ where: { login, password }});
+  }
+
   public async deleteUser(id: string): Promise<boolean> {
     const user = await this.userModel.findOne({ where: { id, isdeleted: false } });
     if (user) {
