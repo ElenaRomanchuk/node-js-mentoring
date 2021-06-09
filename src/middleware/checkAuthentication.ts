@@ -10,18 +10,16 @@ export const checkAuthentication = (req: Request, res: Response, next: NextFunct
   if (token) {
     jsonwebtoken.verify(token.split(' ').pop() || '', config.secret, (err: VerifyErrors | null) => {
       if (!err) {
-        next();
-      } else {
-        next({
-          status: 403,
-          message: 'You don\'t have permission to access',
-        })
+        return next();
       }
-    })
-  } else {
-      next({
-        status: 401,
-        message: 'User is not authorized'
+      return next({
+        status: 403,
+        message: 'You don\'t have permission to access',
       })
-    }
+    })
+  }
+  return next({
+    status: 401,
+    message: 'User is not authorized'
+  })
 };
