@@ -1,4 +1,5 @@
 import winston, { Logger } from 'winston';
+import config from '../../config';
 
 let logger: Logger;
 
@@ -6,8 +7,10 @@ export class WinstonLogger {
   static getInstance(){
     if (logger) {
       return logger;
-    } else {
-      return logger = winston.createLogger({
+    } 
+      
+return logger = winston.createLogger({
+        silent: config.silentMode,
         format: winston.format.combine(
           winston.format.timestamp(),
           winston.format.json(),
@@ -16,7 +19,6 @@ export class WinstonLogger {
           new winston.transports.Console(),
         ],
       });
-
-    }
+    
   }
 }

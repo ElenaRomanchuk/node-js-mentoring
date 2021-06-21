@@ -8,7 +8,7 @@ export interface User {
   isdeleted: boolean;
 };
 
-export interface UserCreationAttributes extends Optional<User, "id"> {};
+export type UserCreationAttributes = Optional<User, "id">;
 
 export enum GroupPermission {
   READ = 'READ',
@@ -24,7 +24,7 @@ export interface Group {
   permissions: Array<GroupPermission>;
 };
 
-export interface GroupCreationAttributes extends Optional<Group, "id"> {};
+export type GroupCreationAttributes = Optional<Group, "id">;
 
 export interface UserGroup {
   UserId: string;

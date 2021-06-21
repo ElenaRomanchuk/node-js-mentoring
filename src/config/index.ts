@@ -16,6 +16,7 @@ const config = {
   database: process.env.DB_NAME || DEFAULT_DATABASE,
   dbPort: process.env.DB_PORT || DEFAULT_DB_PORT,
   secret: process.env.SECRET || DEFAULT_SECRET,
+  silentMode: !!process.env.SILENT,
 };
 
 export default {

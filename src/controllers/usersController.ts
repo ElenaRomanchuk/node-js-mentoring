@@ -24,25 +24,24 @@ export class UserController {
   @asyncControllerErrorLog()
   async getUserById (req: Request, res: Response, next: NextFunction) {
     const user = await this.userService.getUserByID(req.params.id);
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({message: `User with id "${req.params.id}" not found`});
-    }
+
+    res.json(user);
   }
 
   @asyncControllerErrorLog()
   async createUser (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) {
     const userData = req.body;
     const user = await this.userService.createUser(userData);
+
     res.json(user);
   }
 
   @asyncControllerErrorLog()
   async updateUser (req: ValidatedRequest<UserRequestSchema>, res: Response, next: NextFunction) {
-      const userData = {...req.body, id: req.params.id};
-      const user = await this.userService.updateUser(userData);
-      res.send(user);
+    const userData = {...req.body, id: req.params.id};
+    const user = await this.userService.updateUser(userData);
+
+    res.send(user);
   }
 
   @asyncControllerErrorLog()
@@ -55,6 +54,7 @@ export class UserController {
   async getUserSuggestions (req: ValidatedRequest<UserSearchRequestSchema>, res: Response, next: NextFunction) {
     const {login, limit} = req.query;
     const users = await this.userService.getAutoSuggestUsers((login || '').toString(), Number(limit));
+
     res.json(users);
   }
 }

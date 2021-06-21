@@ -1,8 +1,8 @@
 import {Service} from "typedi";
-import {AuthService} from "../services/authService";
-import {asyncControllerErrorLog} from "../logging/asyncControllerErrorLog";
 import {NextFunction, Response} from "express";
 import {ValidatedRequest} from "express-joi-validation";
+import {AuthService} from "../services/authService";
+import {asyncControllerErrorLog} from "../logging/asyncControllerErrorLog";
 import {LoginRequestSchema} from "../middleware/validation/loginValidation";
 
 @Service()

@@ -1,6 +1,6 @@
 import {Container} from "typedi";
-import {AuthController} from "../controllers/authController";
 import {Router} from "express";
+import {AuthController} from "../controllers/authController";
 import {loginValidation} from "../middleware/validation/loginValidation";
 
 const authController = Container.get(AuthController);

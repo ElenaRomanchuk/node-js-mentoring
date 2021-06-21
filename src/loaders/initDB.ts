@@ -1,7 +1,7 @@
 import { Client } from 'pg';
 import config from '../config';
 
-const createUserTableQuery: string = `
+const createUserTableQuery = `
 DROP TABLE public.users;
 CREATE TABLE public.users
 (
@@ -13,7 +13,7 @@ CREATE TABLE public.users
     CONSTRAINT users_pkey PRIMARY KEY (id)
 )`;
 
-const fillUserTableQuery: string = `INSERT INTO Users (id, login, password, age, isdeleted) VALUES
+const fillUserTableQuery = `INSERT INTO Users (id, login, password, age, isdeleted) VALUES
 ('7d14c869-5a0f-4503-bffb-93718e1f6d93', 'admin', 'admin007', 30, false),
 ('3af44b26-861b-44e1-8fd7-4f8c8480c1d7', 'adam', 'blabla1', 33, false),
 ('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b', 'eva', 'Zeva12', 32, false),
@@ -21,7 +21,7 @@ const fillUserTableQuery: string = `INSERT INTO Users (id, login, password, age,
 ('c106a26a-21bb-5538-8bf2-57095d1976c1', 'vanilla', 'lala20', 20, false)
 RETURNING *;`;
 
-const createGroupTableQuery: string = `
+const createGroupTableQuery = `
 DROP TABLE public.groups;
 DROP TYPE permissionsType;
 CREATE TYPE permissionsType AS ENUM ('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES');
@@ -33,14 +33,14 @@ CREATE TABLE public.groups
     CONSTRAINT groups_pkey PRIMARY KEY (id)
 )`;
 
-const fillGroupTableQuery: string = `INSERT INTO groups (id, name, permissions) VALUES
+const fillGroupTableQuery = `INSERT INTO groups (id, name, permissions) VALUES
 ('1234c869-5a0f-4503-bffb-93718e1f6d93', 'admin', ARRAY['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES']::permissionsType[]),
 ('56784b26-861b-44e1-8fd7-4f8c8480c1d7', 'manager', ARRAY['READ', 'SHARE']::permissionsType[]),
 ('9432bd7f-11c0-43da-975e-2a8ad9ebae0b', 'guest', ARRAY['READ']::permissionsType[]),
 ('aaaa1a64-40d5-491e-99b0-da01ff1f3341', 'developer', ARRAY['READ', 'WRITE', 'SHARE', 'UPLOAD_FILES']::permissionsType[])
 RETURNING *;`;
 
-const createUserGroupTableQuery: string = `
+const createUserGroupTableQuery = `
 DROP TABLE public.user_group;
 CREATE TABLE public.user_group
 (
@@ -49,7 +49,7 @@ CREATE TABLE public.user_group
     CONSTRAINT user_group_pkey PRIMARY KEY ("UserId", "GroupId")
 )`;
 
-const addUserGroupConstraintsQuery: string = `
+const addUserGroupConstraintsQuery = `
 -- ALTER TABLE public.user_group DROP CONSTRAINT "user_group_UserId_fkey";
 
 ALTER TABLE public.user_group
@@ -67,13 +67,14 @@ ALTER TABLE public.user_group
     ON DELETE CASCADE;
 `;
 
-
 const initTable = async (client: Client, createTableQuery: string, fillTableQuery?: string) => {
   try {
     const createTableResult = await client.query(createTableQuery);
+
     console.log('Table has created\n', createTableResult);
     if (fillTableQuery) {
       const insertResult = await client.query(fillTableQuery);
+
       console.log('Query insert/alter\n', insertResult);
     }
   } catch (err) {
@@ -84,6 +85,7 @@ const initTable = async (client: Client, createTableQuery: string, fillTableQuer
 export const initDB = async () => {
   console.log(config.connectionString);
   const client: Client = new Client(config.connectionString);
+
   try {
     await client.connect();
     console.log('Connected to the DB\n');

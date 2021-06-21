@@ -1,7 +1,7 @@
 import {DataTypes, ModelDefined, Sequelize} from 'sequelize';
 import {Group, GroupCreationAttributes, GroupPermission} from "../types";
 
-const permissions: (keyof typeof  GroupPermission)[] = ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'];
+const permissions: (keyof typeof GroupPermission)[] = ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'];
 
 export default (sequelize: Sequelize) => {
   const GroupModel: ModelDefined<Group, GroupCreationAttributes> = sequelize.define(
@@ -28,5 +28,6 @@ export default (sequelize: Sequelize) => {
       paranoid: true
     }
   );
+
   return GroupModel;
 };

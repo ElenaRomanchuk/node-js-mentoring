@@ -1,66 +1,67 @@
-import  httpErrors  from 'http-errors';
-import { Op , WhereOptions } from 'sequelize';
-import { Inject, Service} from 'typedi';
-import { UserModel } from '../models';
-import { UserMapper } from '../mappers/userMapper';
-import { User, UserCreationAttributes } from '../types';
-
-const USER_NOT_FOUND = 'User not found';
+import httpErrors from 'http-errors';
+import {Op, WhereOptions} from 'sequelize';
+import {Inject, Service} from 'typedi';
+import {UserModel} from '../models';
+import {UserMapper} from '../mappers/userMapper';
+import {User, UserCreationAttributes} from '../types';
+import {USER_NOT_FOUND} from '../constants';
 
 @Service()
 export class UserService {
-  constructor(@Inject('UserModel') private userModel: typeof UserModel, private userMapper: UserMapper){
+  constructor(@Inject('UserModel') private userModel: typeof UserModel, private userMapper: UserMapper) {
   }
 
   public async getUsers(): Promise<User[]> {
-    const users = await this.userModel.findAll({ where: { isdeleted: false } });
+    const users = await this.userModel.findAll({where: {isdeleted: false}});
+
     return users.map((user) => this.userMapper.toDomain(user));
   }
 
   public async getUserByID(id: string): Promise<User> {
-    const user = await this.userModel.findOne({ where: { id, isdeleted: false } });
+    const user = await this.userModel.findOne({where: {id, isdeleted: false}});
+
     if (user) {
       return this.userMapper.toDomain(user);
     }
     throw httpErrors(404, USER_NOT_FOUND);
   }
 
-  public async getUserByCredentials (login: User['login'], password: User['password']) {
-    return this.userModel.findOne({ where: { login, password }});
+  public async getUserByCredentials(login: User['login'], password: User['password']) {
+    return this.userModel.findOne({where: {login, password}});
   }
 
   public async deleteUser(id: string): Promise<boolean> {
-    const user = await this.userModel.findOne({ where: { id, isdeleted: false } });
+    const user = await this.userModel.findOne({where: {id, isdeleted: false}});
+
     if (user) {
-      user.set('isdeleted', true);
-      await user.save();
+      await user.update({isdeleted: true});
+
       return true;
     }
     throw httpErrors(404, USER_NOT_FOUND);
   }
 
   public async updateUser(data: User): Promise<User> {
-    const { id = '', login, age, password, isdeleted } = data ;
-    const user = await this.userModel.findOne({ where : { id, isdeleted: false } });
+    const {id = '', login, age, password, isdeleted} = data;
+    const user = await this.userModel.findOne({where: {id, isdeleted: false}});
+
     if (user) {
-      user.set('login', login);
-      user.set('age', age);
-      user.set('password', password);
-      user.set('isdeleted', isdeleted);
-      await user.save();
+      await user.update({login, age, password, isdeleted});
+
       return this.userMapper.toDomain(user);
     }
     throw httpErrors(404, USER_NOT_FOUND);
   }
 
   public async createUser(data: UserCreationAttributes): Promise<User> {
-    const { login, password, age } = data;
+    const {login, password, age} = data;
     const user = await this.userModel.create({
       age,
       login,
       password,
       isdeleted: false,
     });
+
     return this.userMapper.toDomain(user);
   }
 
@@ -69,9 +70,10 @@ export class UserService {
     limit?: number,
   ): Promise<User[]> {
     const where: WhereOptions = loginSubstring
-      ? { login: { [Op.iLike]: `${loginSubstring}%` }, isdeleted: false }
+      ? {login: {[Op.iLike]: `${loginSubstring}%`}, isdeleted: false}
       : {};
-    const users = await this.userModel.findAll({ limit, where });
+    const users = await this.userModel.findAll({limit, where});
+
     return users.map((user) => this.userMapper.toDomain(user));
   }
 }

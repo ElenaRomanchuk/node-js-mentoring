@@ -1,0 +1,52 @@
+{
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "jest": true,
+    "node": true
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": 2,
+    "newline-before-return": 2,
+    "newline-after-var": 2,
+    "no-shadow": 0,
+    "no-console": 0,
+    "no-func-assign": 0,
+    "no-unused-expressions": [
+      2,
+      {
+        "allowTernary": true,
+        "allowShortCircuit": true
+      }
+    ],
+    "no-multiple-empty-lines": [
+      1,
+      {
+        "max": 1
+      }
+    ],
+    "no-use-before-define": [
+      2,
+      {
+        "functions": false
+      }
+    ],
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/newline-after-import": 2,
+    "import/extensions": 0,
+    "import/no-unresolved": 0,
+    "@typescript-eslint/ban-ts-comment": 0
+  }
+}

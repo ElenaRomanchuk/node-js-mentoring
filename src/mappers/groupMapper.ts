@@ -8,6 +8,7 @@ export class GroupMapper {
   toDomain(dalEntity: Model<Group, GroupCreationAttributes>) {
     return dalEntity.get();
   };
+
   toDalEntity(domainEntity: Group) {
     return GroupModel.build(domainEntity);
   }
