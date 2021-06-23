@@ -16,68 +16,49 @@ export class GroupController {
 
   @asyncControllerErrorLog()
   async getGroups (req: Request, res: Response, next: NextFunction) {
-    try {
-      const groups = await this.groupService.getGroups();
-      res.json(groups);
-    } catch (error) {
-      next(error);
-    }
+    const groups = await this.groupService.getGroups();
+
+    res.json(groups);
   }
 
   @asyncControllerErrorLog()
   async getGroupById (req: Request, res: Response, next: NextFunction) {
-    try {
-      const group = await this.groupService.getGroupByID(req.params.id);
-      if (group) {
-        res.json(group);
-      } else {
-        res.status(404).json({message: `Group with id "${req.params.id}" not found`});
-      }
-    } catch (error) {
-      next(error)
+    const group = await this.groupService.getGroupByID(req.params.id);
+
+    if (group) {
+      res.json(group);
+    } else {
+      res.status(404).json({message: `Group with id "${req.params.id}" not found`});
     }
   }
 
   @asyncControllerErrorLog()
   async createGroup (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) {
-    try {
-      const groupData = req.body;
-      const group = await this.groupService.createGroup(groupData);
-      res.json(group);
-    } catch (error) {
-      next(error)
-    }
+    const groupData = req.body;
+    const group = await this.groupService.createGroup(groupData);
+
+    res.json(group);
   }
 
   @asyncControllerErrorLog()
   async updateGroup (req: ValidatedRequest<GroupRequestSchema>, res: Response, next: NextFunction) {
-    try {
-      const groupData = {...req.body, id: req.params.id};
-      const group = await this.groupService.updateGroup(groupData);
-      res.send(group);
-    } catch (error) {
-      next(error)
-    }
+    const groupData = {...req.body, id: req.params.id};
+    const group = await this.groupService.updateGroup(groupData);
+
+    res.send(group);
   }
 
   @asyncControllerErrorLog()
   async deleteGroup (req: Request, res: Response, next: NextFunction) {
-    try {
-      await this.groupService.deleteGroup(req.params.id);
-      res.sendStatus(200);
-    } catch (error) {
-      next(error)
-    }
+    await this.groupService.deleteGroup(req.params.id);
+    res.sendStatus(200);
   }
 
   @asyncControllerErrorLog()
   async addUsersToGroup (req: ValidatedRequest<AddUsersRequestSchema>, res: Response, next: NextFunction) {
-    try {
-      const group = await this.groupService.addUsersToGroup(req.params.id, req.query.user);
-      res.send(group);
-    } catch (error) {
-      next(error)
-    }
+    const group = await this.groupService.addUsersToGroup(req.params.id, req.query.user);
+
+    res.send(group);
   }
 }
 

@@ -33,5 +33,6 @@ export default (sequelize: Sequelize) => {
       paranoid: true
     }
   );
-  return UserModel;
+  
+return UserModel;
 };

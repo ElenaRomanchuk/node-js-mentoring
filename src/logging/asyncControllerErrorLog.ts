@@ -1,5 +1,5 @@
-import { logger } from "./logger";
 import {NextFunction, Request, Response} from "express";
+import { logger } from "./logger";
 
 export function asyncControllerErrorLog() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -17,6 +17,7 @@ export function asyncControllerErrorLog() {
         next(e);
       }
     };
-     return descriptor;
+     
+return descriptor;
   }
 }
